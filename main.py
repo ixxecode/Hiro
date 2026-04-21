@@ -22,10 +22,18 @@ class DesktopCreater():
     
     # [Interno] Metodo que crea el contenido del desktop
     def _create_text(self):
+        # Obtener partes del path
+        parent = self.file_path.parent
+        name = self.file_path.name
+
+        # Construir comando de ejecución
+        exec_cmd = f'bash -c "cd {parent} && ./{name}"'
+
+        # Contenido del .desktop
         text = f"""[Desktop Entry]
 Name={self.file_path.stem}
 Comment=Archivo de prueba
-Exec={self.file_path}
+Exec={exec_cmd}
 Terminal=false
 Type=Application
 """
@@ -43,17 +51,12 @@ Type=Application
         return False
     
     # Metodo que reacciona a lo que _exists devuelva y actua en consecuencia informando al usuario
-    def check_existence(self, after_creation: bool):
-        file = self._exists_desktop()
-        
-        if not after_creation:
-            if file:
-                print(f"[hiro] El dekstop ya existia en: '{self.desktop_file}' sera modificado...")
+    def notify_existence(self, existed_before: bool):
+        if existed_before:
+            print(f"[hiro] El desktop ya existia en: '{self.desktop_file}' sera modificado...")
+            print("[hiro] El desktop fue modificado.")
         else:
-            if file:
-                print(f"[hiro] El desktop fue modificado.")
-            else:
-                print(f"[hiro] El desktop fue creado en: '{self.desktop_dir}'.")
+            print(f"[hiro] El desktop fue creado en: '{self.desktop_dir}'.")
 
     # Metodo que reacciona a lo que _is_executable devuelva y actua en consecuencia informando al usuario
     def check_executable(self):
@@ -74,12 +77,12 @@ Type=Application
         # Verificar si el archivo tiene permisos de ejecucion
         self.check_executable()
 
-        # Verifica y notifica si el desktop existe o no
-        self.check_existence(False)
+        # Verifica y notifica si el desktop existe o no y guarda el estado
+        existed_before = self._exists_desktop()
 
         # Se crea el desktop con el text y se le da permisos de ejecucion 
         self.desktop_file.write_text(text)
         os.chmod(self.desktop_file, 0o755)
 
-        # Verifica y notifica que el desktop fue creado o modificado
-        self.check_existence(True)
+        # Verifica y notifica que el desktop fue creado o modificado segun el estado guardado
+        self.notify_existence(existed_before)
