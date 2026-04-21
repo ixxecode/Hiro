@@ -1,7 +1,7 @@
 # archivo de testeo
 
-from main import desktop_creater
+from main import DesktopCreater
 
-archivo = desktop_creater()
+archivo = DesktopCreater()
 
 archivo.create()
