@@ -1,4 +1,4 @@
-# Hiro [V0.3]
+# Hiro [v0.4]
 
 Hiro es una herramienta simple para generar archivos .desktop en Linux a partir de cualquier archivo ejecutable.
 
@@ -9,7 +9,6 @@ Permite crear accesos directos (.desktop) de forma rápida, sin tener que escrib
 Pensado como una herramienta personal para simplificar el uso de ejecutables, scripts o AppImages.
 
 ## Uso [Actual]
-
 ```bash
 python main.py /ruta/al/archivo
 ```
@@ -32,19 +31,17 @@ Con una estructura funcional:
 - Tipo aplicación
 
 ## Estado del proyecto
-
-### v0.3
-
-- Generación de `.desktop` funcional
+### v0.4
+- Generación de .desktop funcional
 - Validación básica de ejecutables
-- Asignación automática de permisos (chmod)
-- Detección de existencia del `.desktop` (creación o modificación)
-- Ejecución robusta usando `bash -c` (cd + ejecución del archivo)
+- Confirmación del usuario antes de asignar permisos (chmod)
+- Cancelación del proceso si el usuario rechaza otorgar permisos
+- Detección de existencia del .desktop (creación o modificación)
+- Ejecución robusta usando bash -c (cd + ejecución del archivo)
 - Mejora en la estructura interna del código (separación en métodos)
 - Logging simple en consola
 
 ## Próximos pasos
-
 - Soporte más completo para distintos tipos de archivo (.py, etc.)
 - Agregar interfaz gráfica (PySide6)
 - Personalización de nombre y descripción
@@ -53,6 +50,6 @@ Con una estructura funcional:
 
 ## Notas
 
-- Actualmente Hiro puede modificar permisos de ejecución automáticamente en el archivo seleccionado.
-
-- Este comportamiento es intencional en esta etapa, pero podría volverse opcional en futuras versiones.
+- Hiro ya no asigna permisos automáticamente sin intervención del usuario.
+- Si el archivo no es ejecutable, se solicita confirmación antes de continuar.
+- Si el usuario rechaza, la creación del .desktop se cancela.

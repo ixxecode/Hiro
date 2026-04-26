@@ -1,4 +1,4 @@
-# | [ Dia 2 ]
+# | [ Dia 3 ]
 # | ~/main.py
 # | Primer archivo de hiro
 
@@ -60,22 +60,29 @@ Type=Application
 
     # Metodo que reacciona a lo que _is_executable devuelva y actua en consecuencia informando al usuario
     def check_executable(self):
-        file = self._is_executable()
+        if not self._is_executable():
+            print("[hiro] El archivo no es ejecutable...")
+            choice = input("[hiro] Dar permisos para que sea ejecutable? (y/n): ").strip().lower()
 
-        if not file:
-            print(f"[hiro] El archivo seleccionado no tenia permisos de ejecucion...")
-            os.chmod(self.file_path, 0o755)
-            print("[hiro] Se le dio permisos de ejecucion al archivo seleccionado.")
-        else:
-            print("[hiro] Archivo seleccionado...")
+            if choice == "y":
+                os.chmod(self.file_path, 0o755)
+                print("[hiro] Permisos otorgados.")
+                return True
+            else:
+                print("[hiro] Cancelando creación del desktop.")
+                return False
+
+        print("[hiro] Archivo seleccionado...")
+        return True
 
     # Metodo que crea el desktop
     def create(self):
+        # Verificar si el archivo tiene permisos de ejecucion
+        if not self.check_executable():
+            return
+
         # Contenido general del desktop
         text = self._create_text()
-
-        # Verificar si el archivo tiene permisos de ejecucion
-        self.check_executable()
 
         # Verifica y notifica si el desktop existe o no y guarda el estado
         existed_before = self._exists_desktop()
