@@ -25,9 +25,15 @@ class DesktopCreater():
         # Obtener partes del path
         parent = self.file_path.parent
         name = self.file_path.name
-
+        suffix = self.file_path.suffix
+ 
         # Construir comando de ejecución
-        exec_cmd = f'bash -c "cd {parent} && ./{name}"'
+        if suffix == ".py":
+            exec_cmd = f'python3 "{self.file_path}"'
+        elif suffix == ".sh":
+            exec_cmd = f'bash "{self.file_path}"'
+        else:
+            exec_cmd = f'bash -c "cd \\"{parent}\\" && ./\\"{name}\\""'
 
         # Contenido del .desktop
         text = f"""[Desktop Entry]
@@ -38,11 +44,11 @@ Terminal=false
 Type=Application
 """
         return text
-    
+        
     # [Interno] Metodo que verifica si el desktop existe o no (devuelve True o False)
     def _exists_desktop(self):
         return self.desktop_file.exists()
-    
+
     # [Interno] Metodo que verifica si el archivo seleccionado es ejecutable o no (devuelve True o False)
     def _is_executable(self):
         file = self.file_path
