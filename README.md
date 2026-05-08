@@ -1,4 +1,4 @@
-# Hiro [v0.6]
+# Hiro [v0.7]
 
 Hiro es una herramienta CLI simple para generar archivos `.desktop` en Linux a partir de archivos ejecutables, scripts o binarios.
 
@@ -31,6 +31,9 @@ La herramienta solicitará:
 ```bash
 [hiro] Ruta del archivo:
 [hiro] Nombre del desktop (opcional):
+[hiro] Comentario del desktop (opcional):
+[hiro] Categoria (Utility/Game/Development/etc):
+[hiro] Ejecutar en terminal? (s/n):
 ```
 
 ---
@@ -46,11 +49,18 @@ Se genera un archivo `.desktop` en:
 ### Con una estructura funcional:
 
 * Nombre automático o personalizado
+* Comentario personalizado
+* Categorías compatibles con Linux (`Categories=`)
+* Soporte para terminal (`Terminal=true/false`)
 * Detección automática del tipo de ejecución
 * Compatibilidad con ejecutables Linux
 * Working directory correcto mediante `Path=`
-* Sin terminal por defecto
-* Tipo aplicación
+* Tipo aplicación (`Type=Application`)
+* Firma interna de Hiro mediante:
+
+```ini
+X-Hiro-Version=0.7
+```
 
 ---
 
@@ -73,51 +83,62 @@ Hiro/
 
   * Gestiona interacción con el usuario
   * Inputs
-  * Mensajes en consola
   * Confirmaciones
+  * Mensajes en consola
 
 * `manager/`
 
   * Gestiona la lógica principal
   * Creación del `.desktop`
-  * Permisos
   * Validaciones
+  * Permisos
   * Generación del contenido
 
 ---
 
 ## Estado del proyecto
 
-### v0.6
+### v0.7
 
-* Reestructuración completa del proyecto
-* Separación entre CLI y lógica interna
-* Arquitectura modular preparada para futuras herramientas
-* Generación funcional de archivos `.desktop`
+* Soporte para categorías (`Categories=`)
+
+* Soporte para ejecución en terminal (`Terminal=true/false`)
+
+* Personalización de comentarios (`Comment=`)
+
+* Firma interna mediante `X-Hiro-Version`
+
+* Mejora de compatibilidad con launchers Linux
+
+* Generación de `.desktop` más estándar y mantenible
+
+* Uso correcto de:
+
+  * `Exec=`
+  * `Path=`
+  * `Categories=`
+  * `Terminal=`
+  * `Type=Application`
+
 * Compatibilidad con:
 
   * `.py`
   * `.sh`
   * binarios Linux
-* Personalización del nombre del launcher
+
 * Validación de existencia del archivo
+
 * Validación de permisos de ejecución
+
 * Confirmación antes de aplicar `chmod`
+
 * Manejo básico de errores controlados
+
 * Detección de creación o modificación del `.desktop`
-* Uso correcto de `Exec=` y `Path=` para compatibilidad Linux
+
+* Arquitectura modular CLI/Manager
+
 * Logging simple en consola
-
----
-
-## Próximos pasos
-
-* Personalización de descripción
-* Soporte para iconos
-* Modo terminal opcional
-* Soporte para categorías (`Categories=`)
-* Integración con menú contextual
-* Nuevas herramientas internas dentro de Hiro
 
 ---
 
@@ -126,4 +147,5 @@ Hiro/
 * Hiro no asigna permisos automáticamente sin intervención del usuario.
 * Si el archivo no existe, el proceso se cancela de forma segura.
 * Si el archivo no es ejecutable, Hiro solicita confirmación antes de otorgar permisos.
+* Hiro agrega una firma interna (`X-Hiro-Version`) para identificar launchers generados por la herramienta.
 * El proyecto está pensado exclusivamente para Linux y entornos compatibles con `.desktop`.

@@ -1,4 +1,4 @@
-# | [ Dia 5 ]
+# | [ Dia 6 ]
 # | ~/cli/desktop.py
 # | Gestiona la interfaz CLI de la herramienta
 
@@ -11,18 +11,52 @@ class CliDesktop():
 
     # Metodo que solicita los datos necesarios al usuario
     def ask_data(self):
-        path_file = input("[hiro] Ruta del archivo: ").strip()
+        path_file = input(
+            "[hiro] Ruta del archivo: "
+        ).strip()
 
         desktop_name = input(
             "[hiro] Nombre del desktop (opcional): "
         ).strip()
 
+        comment = input(
+            "[hiro] Comentario del desktop (opcional): "
+        ).strip()
+
+        category = input(
+            "[hiro] Categoria (Utility/Game/Development/etc): "
+        ).strip()
+
+        terminal_choice = input(
+            "[hiro] Ejecutar en terminal? (s/n): "
+        ).strip().lower()
+
         # Si el usuario no escribe nada se usa None
         if not desktop_name:
             desktop_name = None
 
+        # Comentario predeterminado
+        if not comment:
+            comment = "Sin comentario"
+
+        # Categoria predeterminada
+        if not category:
+            category = "Utility"
+
+        # Configuracion de terminal
+        if terminal_choice == "s":
+            terminal = True
+        else:
+            terminal = False
+
         # Crear manager con los datos del usuario
-        self.manager = DesktopManager(path_file, desktop_name)
+        self.manager = DesktopManager(
+            path_file=path_file,
+            new_name_desktop=desktop_name,
+            comment=comment,
+            terminal=terminal,
+            category=category
+        )
 
     # Metodo que reacciona a lo que exists_desktop devuelve
     def notify_existence(self, existed_before: bool):

@@ -1,4 +1,4 @@
-# | [ Dia 5 ]
+# | [ Dia 6 ]
 # | ~/manager/desktop.py
 # | Gestiona la creacion del desktop
 
@@ -7,10 +7,19 @@ import os
 
 
 class DesktopManager():
-    def __init__(self, path_file, new_name_desktop=None):
+    def __init__(
+        self,
+        path_file,
+        new_name_desktop=None,
+        comment="Sin comentario",
+        terminal=False,
+        category="Utility"
+    ):
         self.path_file = Path(path_file)
 
-        self.desktop_dir = Path.home() / ".local" / "share" / "applications"
+        self.desktop_dir = (
+            Path.home() / ".local" / "share" / "applications"
+        )
 
         self.desktop_name = new_name_desktop
 
@@ -20,9 +29,16 @@ class DesktopManager():
         else:
             self.final_name = self.desktop_name
 
-        # Ruta final del archivo .desktop
-        self.desktop_path = self.desktop_dir / f"{self.final_name}.desktop"
+        self.comment = comment
+        self.terminal = terminal
 
+        # Categoria del launcher
+        self.category = category
+
+        # Ruta final del archivo .desktop
+        self.desktop_path = (
+            self.desktop_dir / f"{self.final_name}.desktop"
+        )
 
     # | [Interno] Metodo que crea el contenido del desktop
     def _create_text(self):
@@ -42,18 +58,23 @@ class DesktopManager():
         # Contenido del .desktop
         text = f"""[Desktop Entry]
 Name={self.final_name}
-Comment=Archivo de prueba
+Comment={self.comment}
 Exec={exec_cmd}
 Path={parent}
-Terminal=false
+Terminal={str(self.terminal).lower()}
 Type=Application
+Categories={self.category};
+X-Hiro-Version=0.7
 """
 
         return text
 
     # Metodo que verifica si el archivo existe o no
     def exists_file(self):
-        return self.path_file.exists() and self.path_file.is_file()
+        return (
+            self.path_file.exists()
+            and self.path_file.is_file()
+        )
 
     # Metodo que verifica si el desktop existe o no
     def exists_desktop(self):
