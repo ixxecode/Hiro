@@ -64,7 +64,7 @@ Path={parent}
 Terminal={str(self.terminal).lower()}
 Type=Application
 Categories={self.category};
-X-Hiro-Version=0.7
+X-Hiro-Version=0.8
 """
 
         return text

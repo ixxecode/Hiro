@@ -1,4 +1,4 @@
-# Hiro [v0.7]
+# Hiro [v0.8]
 
 Hiro es una herramienta CLI simple para generar archivos `.desktop` en Linux a partir de archivos ejecutables, scripts o binarios.
 
@@ -20,15 +20,40 @@ El proyecto está orientado a simplicidad, mantenimiento sencillo y crecimiento 
 
 ---
 
+## Instalación
+
+Hiro incluye un instalador local mediante `install.sh`.
+
+### Ejecutar instalación
+
+```bash id="o1vx6s"
+chmod +x install.sh
+./install.sh
+```
+
+La instalación crea el comando global:
+
+```bash id="x8t4yn"
+hiro
+```
+
+usando:
+
+```bash id="w7n5qk"
+~/.local/bin/
+```
+
+---
+
 ## Uso [Actual]
 
-```bash
-python main.py
+```bash id="n2m7fr"
+hiro
 ```
 
 La herramienta solicitará:
 
-```bash
+```bash id="y3v5dk"
 [hiro] Ruta del archivo:
 [hiro] Nombre del desktop (opcional):
 [hiro] Comentario del desktop (opcional):
@@ -42,7 +67,7 @@ La herramienta solicitará:
 
 Se genera un archivo `.desktop` en:
 
-```bash
+```bash id="m5c8zw"
 ~/.local/share/applications/
 ```
 
@@ -58,17 +83,18 @@ Se genera un archivo `.desktop` en:
 * Tipo aplicación (`Type=Application`)
 * Firma interna de Hiro mediante:
 
-```ini
-X-Hiro-Version=0.7
+```ini id="d6u4rx"
+X-Hiro-Version=0.8
 ```
 
 ---
 
 ## Estructura del proyecto
 
-```bash
+```bash id="j9k3tw"
 Hiro/
 ├── main.py
+├── install.sh
 ├── cli/
 │   └── desktop.py
 ├── manager/
@@ -98,7 +124,13 @@ Hiro/
 
 ## Estado del proyecto
 
-### v0.7
+### v0.8
+
+* Instalador local mediante `install.sh`
+
+* Comando global `hiro`
+
+* Integración con `~/.local/bin`
 
 * Soporte para categorías (`Categories=`)
 
@@ -148,4 +180,5 @@ Hiro/
 * Si el archivo no existe, el proceso se cancela de forma segura.
 * Si el archivo no es ejecutable, Hiro solicita confirmación antes de otorgar permisos.
 * Hiro agrega una firma interna (`X-Hiro-Version`) para identificar launchers generados por la herramienta.
+* El instalador utiliza `~/.local/bin` para evitar permisos root.
 * El proyecto está pensado exclusivamente para Linux y entornos compatibles con `.desktop`.
