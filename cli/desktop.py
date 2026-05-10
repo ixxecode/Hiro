@@ -1,150 +1,96 @@
-# | [ Dia 6 ]
+# | [ Dia 7 ]
 # | ~/cli/desktop.py
 # | Gestiona la interfaz CLI de la herramienta
 
 from manager.desktop import DesktopManager
 
 
-class CliDesktop():
-    def __init__(self):
-        self.manager = None
+class CliDesktop:
+    """
+    Maneja toda la interacción con el usuario en terminal.
 
-    # Metodo que solicita los datos necesarios al usuario
+    Su responsabilidad es:
+    - Pedir datos
+    - Validar flujo básico
+    - Delegar lógica al DesktopManager
+    """
+
     def ask_data(self):
-        path_file = input(
-            "[hiro] Ruta del archivo: "
-        ).strip()
+        """
+        Solicita al usuario los datos necesarios para crear el .desktop.
+        """
 
-        desktop_name = input(
-            "[hiro] Nombre del desktop (opcional): "
-        ).strip()
+        path_file = input("[hiro] Ruta del archivo: ").strip()
+        desktop_name = input("[hiro] Nombre del desktop (opcional): ").strip()
+        comment = input("[hiro] Comentario (opcional): ").strip()
+        category = input("[hiro] Categoria: ").strip()
+        terminal_choice = input("[hiro] Ejecutar en terminal? (s/n): ").strip().lower()
 
-        comment = input(
-            "[hiro] Comentario del desktop (opcional): "
-        ).strip()
+        return {
+            "path_file": path_file,
+            "desktop_name": desktop_name or None,
+            "comment": comment or "Sin comentario",
+            "category": category or "Utility",
+            "terminal": terminal_choice == "s",
+        }
 
-        category = input(
-            "[hiro] Categoria (Utility/Game/Development/etc): "
-        ).strip()
+    def show_preview(self, manager):
+        """
+        Muestra al usuario cómo quedará el archivo .desktop antes de crearlo.
+        """
+        print("\n[hiro] Preview del desktop:")
+        print(manager.preview())
 
-        terminal_choice = input(
-            "[hiro] Ejecutar en terminal? (s/n): "
-        ).strip().lower()
+    def confirm(self):
+        """
+        Pide confirmación final antes de crear el archivo.
+        """
+        return input("\n[hiro] Confirmar creacion? (s/n): ").strip().lower() == "s"
 
-        # Si el usuario no escribe nada se usa None
-        if not desktop_name:
-            desktop_name = None
+    def run(self):
+        """
+        Flujo principal de la CLI:
+        1. Obtener datos del usuario
+        2. Validar archivo
+        3. Manejar permisos si es necesario
+        4. Mostrar preview
+        5. Confirmar creación
+        6. Crear .desktop
+        """
 
-        # Comentario predeterminado
-        if not comment:
-            comment = "Sin comentario"
+        data = self.ask_data()
+        manager = DesktopManager(**data)
 
-        # Categoria predeterminada
-        if not category:
-            category = "Utility"
-
-        # Configuracion de terminal
-        if terminal_choice == "s":
-            terminal = True
-        else:
-            terminal = False
-
-        # Crear manager con los datos del usuario
-        self.manager = DesktopManager(
-            path_file=path_file,
-            new_name_desktop=desktop_name,
-            comment=comment,
-            terminal=terminal,
-            category=category
-        )
-
-    # Metodo que reacciona a lo que exists_desktop devuelve
-    def notify_existence(self, existed_before: bool):
-        if existed_before:
-            print(
-                f"[hiro] El desktop ya existia en: "
-                f"'{self.manager.desktop_path}' sera modificado..."
-            )
-
-            print("[hiro] El desktop fue modificado.")
-
-        else:
-            print(
-                f"[hiro] El desktop fue creado en: "
-                f"'{self.manager.desktop_dir}'."
-            )
-
-    # Metodo que verifica si el archivo existe
-    def check_file(self):
-        if not self.manager.exists_file():
+        # Verificar que el archivo exista
+        if not manager.exists_file():
             print("[hiro] Error: el archivo no existe.")
-            return False
-
-        return True
-
-    # Metodo que verifica permisos del archivo seleccionado
-    def check_executable(self):
-        if not self.manager.is_executable():
-            print("[hiro] El archivo no es ejecutable...")
-
-            choice = input(
-                "[hiro] Dar permisos para que sea ejecutable? (s/n): "
-            ).strip().lower()
-
-            if choice == "s":
-                try:
-                    self.manager.grant_file_permissions()
-
-                    print("[hiro] Permisos otorgados.")
-                    return True
-
-                except PermissionError:
-                    print(
-                        "[hiro] Error: no tienes permisos suficientes."
-                    )
-
-                    return False
-
-                except FileNotFoundError:
-                    print(
-                        "[hiro] Error: el archivo ya no existe."
-                    )
-
-                    return False
-
-            else:
-                print("[hiro] Cancelando creación del desktop.")
-                return False
-
-        print("[hiro] Archivo seleccionado...")
-        return True
-
-    # Metodo principal de creacion
-    def create(self):
-        # Solicitar datos al usuario
-        self.ask_data()
-
-        # Verificar existencia del archivo
-        if not self.check_file():
             return
 
-        # Verificar permisos del archivo
-        if not self.check_executable():
+        # Verificar permisos de ejecución
+        if not manager.is_executable():
+            choice = input("[hiro] No es ejecutable. Dar permisos? (s/n): ").strip().lower()
+
+            if choice != "s":
+                print("[hiro] Cancelado.")
+                return
+
+            manager.grant_file_permissions()
+
+        # Mostrar cómo quedará el archivo
+        self.show_preview(manager)
+
+        # Confirmación final
+        if not self.confirm():
+            print("[hiro] Cancelado por el usuario.")
             return
 
-        # Guardar estado de existencia antes de crear
-        existed_before = self.manager.exists_desktop()
+        existed_before = manager.exists_desktop()
 
-        try:
-            # Crear desktop
-            self.manager.create_desktop()
+        # Crear el .desktop
+        manager.create_desktop()
 
-        except PermissionError:
-            print(
-                "[hiro] Error: no tienes permisos para crear el desktop."
-            )
-
-            return
-
-        # Informar resultado al usuario
-        self.notify_existence(existed_before)
+        # Feedback final
+        if existed_before:
+            print("[hiro] Desktop actualizado.")
+        else:
+            print("[hiro] Desktop creado.")

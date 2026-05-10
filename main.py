@@ -1,4 +1,4 @@
-# | [ Dia 5 ]
+# | [ Dia 7 ]
 # | ~/main.py
 # | Punto de entrada principal de Hiro
 
@@ -7,7 +7,7 @@ from cli.desktop import CliDesktop
 
 def main():
     cli = CliDesktop()
-    cli.create()
+    cli.run()
 
 
 if __name__ == "__main__":

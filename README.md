@@ -1,24 +1,30 @@
-# Hiro [v0.8]
+# Hiro
 
-Hiro es una herramienta CLI simple para generar archivos `.desktop` en Linux a partir de archivos ejecutables, scripts o binarios.
-
-Pensado como una utilidad rápida y liviana para automatizar la creación de accesos directos sin depender de interfaces gráficas.
-
----
+Hiro es una herramienta CLI para Linux que permite generar archivos .desktop de forma automática a partir de ejecutables, scripts o binarios.
 
 ## Descripción
 
-Hiro permite crear archivos `.desktop` funcionales de forma automática, evitando tener que escribir manualmente la estructura requerida por Linux.
+Hiro automatiza la creación de archivos .desktop válidos en sistemas Linux, evitando la escritura manual de su estructura.
 
-Actualmente soporta:
+## Características
 
-* Scripts Python (`.py`)
-* Scripts Bash (`.sh`)
-* Ejecutables Linux (`.x86_64`, binarios y similares)
+### Hiro en su versión 1.0 soporta:
 
-El proyecto está orientado a simplicidad, mantenimiento sencillo y crecimiento modular a futuro.
+- `Scripts Python (.py)`
+- `Scripts Bash (.sh)`
+- `Ejecutables Linux (binarios y similares)`
 
----
+### Incluye:
+
+- Detección automática del tipo de ejecución
+- Generación consistente de archivos .desktop
+- Vista previa antes de crear el archivo
+- Confirmación del usuario antes de escribir en disco
+- Manejo controlado de permisos de ejecución
+- Validación de existencia del archivo original
+- Detección de .desktop existente (actualización o creación)
+- Organización modular CLI / lógica
+- Generación estándar compatible con Linux
 
 ## Instalación
 
@@ -26,159 +32,117 @@ Hiro incluye un instalador local mediante `install.sh`.
 
 ### Ejecutar instalación
 
-```bash id="o1vx6s"
+```bash
 chmod +x install.sh
 ./install.sh
 ```
 
 La instalación crea el comando global:
 
-```bash id="x8t4yn"
+```bash
 hiro
 ```
 
 usando:
 
-```bash id="w7n5qk"
+```bash
 ~/.local/bin/
 ```
 
----
+## Uso
 
-## Uso [Actual]
-
-```bash id="n2m7fr"
+```bash
 hiro
 ```
 
-La herramienta solicitará:
+El flujo es interactivo y guiado.
 
-```bash id="y3v5dk"
+### Hiro solicitará:
+
+```bash
 [hiro] Ruta del archivo:
 [hiro] Nombre del desktop (opcional):
-[hiro] Comentario del desktop (opcional):
-[hiro] Categoria (Utility/Game/Development/etc):
+[hiro] Comentario (opcional):
+[hiro] Categoria:
 [hiro] Ejecutar en terminal? (s/n):
 ```
 
----
+Luego mostrará una vista previa del `.desktop` generado antes de continuar.
+
+Finalmente pedirá confirmación antes de crear o actualizar el archivo.
 
 ## Resultado
 
-Se genera un archivo `.desktop` en:
+Se genera un archivo .desktop en:
 
-```bash id="m5c8zw"
+```bash
 ~/.local/share/applications/
 ```
 
-### Con una estructura funcional:
+### Estructura generada:
+- Nombre automático o personalizado
+- Comentario configurable
+- Categorías compatibles con el estándar Linux (Categories=)
+- Soporte para ejecución en terminal (Terminal=true/false)
+- Detección automática del tipo de ejecución (Exec=)
+- Working directory correcto (Path=)
+- Tipo de aplicación (Type=Application)
+- Validación previa de entrada
+- Confirmación explícita antes de escritura
 
-* Nombre automático o personalizado
-* Comentario personalizado
-* Categorías compatibles con Linux (`Categories=`)
-* Soporte para terminal (`Terminal=true/false`)
-* Detección automática del tipo de ejecución
-* Compatibilidad con ejecutables Linux
-* Working directory correcto mediante `Path=`
-* Tipo aplicación (`Type=Application`)
-* Firma interna de Hiro mediante:
+Además incluye firma interna:
 
-```ini id="d6u4rx"
-X-Hiro-Version=0.8
+```bash
+[X-Hiro-Version=1.0]
 ```
 
----
+Estructura del proyecto
 
-## Estructura del proyecto
-
-```bash id="j9k3tw"
+```bash
 Hiro/
 ├── main.py
 ├── install.sh
 ├── cli/
-│   └── desktop.py
+│ └── desktop.py
 ├── manager/
-│   └── desktop.py
+│ └── desktop.py
 ├── README.md
 └── .gitignore
 ```
 
-### Organización interna
+## Organización interna
 
-* `cli/`
+### cli/
 
-  * Gestiona interacción con el usuario
-  * Inputs
-  * Confirmaciones
-  * Mensajes en consola
+Encargado de la interacción con el usuario:
 
-* `manager/`
+- Entrada de datos
+- Confirmaciones
+- Flujo de ejecución
+- Presentación de información
 
-  * Gestiona la lógica principal
-  * Creación del `.desktop`
-  * Validaciones
-  * Permisos
-  * Generación del contenido
+### manager/
 
----
+Encargado de la lógica del sistema:
+
+- Generación del .desktop
+- Validación de archivos
+- Manejo de permisos
+- Construcción del contenido final
 
 ## Estado del proyecto
 
-### v0.8
+### v1.0
 
-* Instalador local mediante `install.sh`
+Esta versión representa un estado estable del proyecto:
 
-* Comando global `hiro`
-
-* Integración con `~/.local/bin`
-
-* Soporte para categorías (`Categories=`)
-
-* Soporte para ejecución en terminal (`Terminal=true/false`)
-
-* Personalización de comentarios (`Comment=`)
-
-* Firma interna mediante `X-Hiro-Version`
-
-* Mejora de compatibilidad con launchers Linux
-
-* Generación de `.desktop` más estándar y mantenible
-
-* Uso correcto de:
-
-  * `Exec=`
-  * `Path=`
-  * `Categories=`
-  * `Terminal=`
-  * `Type=Application`
-
-* Compatibilidad con:
-
-  * `.py`
-  * `.sh`
-  * binarios Linux
-
-* Validación de existencia del archivo
-
-* Validación de permisos de ejecución
-
-* Confirmación antes de aplicar `chmod`
-
-* Manejo básico de errores controlados
-
-* Detección de creación o modificación del `.desktop`
-
-* Arquitectura modular CLI/Manager
-
-* Logging simple en consola
-
----
-
-## Notas
-
-* Hiro no asigna permisos automáticamente sin intervención del usuario.
-* Si el archivo no existe, el proceso se cancela de forma segura.
-* Si el archivo no es ejecutable, Hiro solicita confirmación antes de otorgar permisos.
-* Hiro agrega una firma interna (`X-Hiro-Version`) para identificar launchers generados por la herramienta.
-* El instalador utiliza `~/.local/bin` para evitar permisos root.
-* El proyecto está pensado exclusivamente para Linux y entornos compatibles con `.desktop`.
+- Flujo de ejecución completo y controlado
+- Separación clara entre interfaz y lógica
+- Vista previa del resultado antes de escritura
+- Confirmación explícita del usuario antes de cambios en el sistema
+- Manejo consistente de errores comunes
+- Generación estándar de archivos .desktop
+- Compatibilidad con scripts y binarios Linux
+- Instalación local sin requerir permisos root
+- Arquitectura modular estable (CLI / Manager)
+- Diferencias con versiones anteriores
